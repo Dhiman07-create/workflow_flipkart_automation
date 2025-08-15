@@ -1,0 +1,63 @@
+name: Flipkart Web Regression
+
+on:
+  schedule:
+    # Runs daily at 3:30 AM IST (22:00 UTC)
+    - cron: '30 22 * * *'
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  run-web-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # 1. Checkout repo
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Set up JDK
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      # 3. Cache Maven dependencies
+      - name: Cache Maven Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # 4. Install Allure CLI
+      - name: Install Allure CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y allure
+
+      # 5. Run the tests with Maven
+      - name: Run Regression Suite
+        run: mvn clean test -DsuiteXmlFile=testng.xml
+
+      # 6. Generate Allure Report
+      - name: Generate Allure Report
+        run: |
+          allure generate target/allure-results --clean -o target/allure-report
+
+      # 7. Upload Allure Report as Artifact
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: target/allure-report
+
+      # 8. Upload Allure Results for external hosting (optional)
+      - name: Upload Allure Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: target/allure-results
