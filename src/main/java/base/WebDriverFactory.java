@@ -16,15 +16,31 @@ public class WebDriverFactory {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
 
-        File headlessShell = new File("/usr/bin/chrome-headless-shell");
-        if (headlessShell.exists()) {
-            options.setBinary(headlessShell);
-            System.out.println("✅ Using chrome-headless-shell binary");
-        } else {
-            System.out.println("⚠️ Falling back to normal chrome");
+        File headlessShell = null;
+
+// Check for common binaries
+        String[] candidates = {
+                "/usr/bin/chrome-headless-shell",
+                "/usr/bin/chromium-browser",
+                "/snap/bin/chromium"
+        };
+
+        for (String path : candidates) {
+            File bin = new File(path);
+            if (bin.exists()) {
+                headlessShell = bin;
+                break;
+            }
         }
 
-        if (ConfigReader.getBool("headless")) options.addArguments("--headless=chrome");
+        if (headlessShell != null) {
+            options.setBinary(headlessShell);
+            System.out.println("✅ Using binary: " + headlessShell.getAbsolutePath());
+        } else {
+            System.out.println("⚠️ Falling back to normal Chrome");
+        }
+
+        options.addArguments("--headless=chrome");
         String tmpProfile = "/tmp/chrome-profile-" + System.currentTimeMillis();
         options.addArguments("--user-data-dir=" + tmpProfile);
         options.addArguments("--disable-dev-shm-usage");
