@@ -52,6 +52,14 @@ jobs:
           echo "✅ Found suite file: $suite_file"
           echo "SUITE_FILE=$suite_file" >> $GITHUB_ENV
 
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Clean Chrome default profile
+        run: |
+          rm -rf ~/.config/google-chrome
+          rm -rf /tmp/.com.google.Chrome
+
       - name: Run Regression Suite
         run: mvn clean test -DsuiteXmlFile=${{ env.SUITE_FILE }}
 
