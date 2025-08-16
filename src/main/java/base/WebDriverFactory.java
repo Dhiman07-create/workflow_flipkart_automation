@@ -14,7 +14,7 @@ public class WebDriverFactory {
     public static void init() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        if (ConfigReader.getBool("headless")) options.addArguments("--headless=new");
+        if (ConfigReader.getBool("headless")) options.addArguments("--headless=chrome");
         options.addArguments("--start-maximized", "--disable-notifications", "--remote-allow-origins=*");
 
         try {
