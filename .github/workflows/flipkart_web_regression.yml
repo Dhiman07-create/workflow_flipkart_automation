@@ -13,8 +13,11 @@ jobs:
 
     steps:
       # 1. Checkout repo
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
+        working-directory: ./workflow_flipkart_automation
+        run: |
+          ls -la
 
       # 2. Set up JDK
       - name: Set up Java
@@ -41,7 +44,6 @@ jobs:
 
       # 5. Run the tests with Maven
       - name: Run Regression Suite
-        working-directory: ./  # repo root
         run: mvn clean test -DsuiteXmlFile=src/test/resources/TestSuite/webRegression/testng-web.xml
 
       # 6. Generate Allure Report
