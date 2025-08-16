@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.*;
 import utils.ConfigReader;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.time.Duration;
 
@@ -14,6 +15,15 @@ public class WebDriverFactory {
     public static void init() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
+
+        File headlessShell = new File("/usr/bin/chrome-headless-shell");
+        if (headlessShell.exists()) {
+            options.setBinary(headlessShell);
+            System.out.println("✅ Using chrome-headless-shell binary");
+        } else {
+            System.out.println("⚠️ Falling back to normal chrome");
+        }
+
         if (ConfigReader.getBool("headless")) options.addArguments("--headless=chrome");
         String tmpProfile = "/tmp/chrome-profile-" + System.currentTimeMillis();
         options.addArguments("--user-data-dir=" + tmpProfile);
