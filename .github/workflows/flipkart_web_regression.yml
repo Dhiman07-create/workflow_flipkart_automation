@@ -40,8 +40,20 @@ jobs:
           sudo apt-get install -y allure
 
       # 5. Run the tests with Maven
+      - name: Find TestNG suite file
+        id: find-suite
+        run: |
+          # search for testng*.xml anywhere in repo
+          suite_file=$(find . -type f -name "testng-*.xml" | head -n 1)
+          if [ -z "$suite_file" ]; then
+            echo "❌ No TestNG suite file found!"
+            exit 1
+          fi
+          echo "✅ Found suite file: $suite_file"
+          echo "SUITE_FILE=$suite_file" >> $GITHUB_ENV
+
       - name: Run Regression Suite
-        run: mvn clean test -DsuiteXmlFile=src/test/resources/TestSuite/webRegression/testng-web.xml
+        run: mvn clean test -DsuiteXmlFile=${{ env.SUITE_FILE }}
 
       # 6. Generate Allure Report
       - name: Generate Allure Report
