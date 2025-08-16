@@ -1,22 +1,20 @@
 package base;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import utils.ConfigReader;
 
 public class BaseTest {
-    protected WebDriver driver;
+    protected String baseUrl = ConfigReader.get("base.url");
 
-    @BeforeClass
-    public void setUp() {
-        //System.setProperty("webdriver.chrome.driver", "drivers/chromedriver");
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.get("https://www.flipkart.com/");
+    @BeforeMethod(alwaysRun = true, groups = {"web"})
+    public void setUpWeb() {
+        WebDriverFactory.init();
+        WebDriverFactory.get().get(baseUrl);
     }
 
-    @AfterClass
-    public void tearDown() {
-        if (driver != null) driver.quit();
+    @AfterMethod(alwaysRun = true, groups = {"web"})
+    public void tearDownWeb() {
+        WebDriverFactory.quit();
     }
 }
