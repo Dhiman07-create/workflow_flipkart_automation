@@ -107,7 +107,7 @@
                 <version>3.2.5</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>testng-web.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/resources/TestSuite/webRegression/testng-web.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <systemProperties>
                         <!-- mvn -Dplatform=WEB -Denv=qa -DdryRun=true test -->
