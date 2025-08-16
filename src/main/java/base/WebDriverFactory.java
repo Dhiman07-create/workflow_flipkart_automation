@@ -15,7 +15,7 @@ public class WebDriverFactory {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         if (ConfigReader.getBool("headless")) options.addArguments("--headless=chrome");
-        options.addArguments("--start-maximized", "--disable-notifications", "--remote-allow-origins=*");
+        options.addArguments("--start-maximized", "--no-sandbox", "--disable-notifications", "--remote-allow-origins=*");
 
         try {
             // ✅ Unique profile directory
