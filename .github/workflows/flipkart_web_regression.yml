@@ -42,7 +42,7 @@ jobs:
       # 5. Run the tests with Maven
       - name: Run Regression Suite
         working-directory: ./  # repo root
-        run: mvn clean test -DsuiteXmlFile=src/test/resources/TestSuite/webRegression/testng-web.xml
+        run: mvn clean test -DsuiteXmlFile=./src/test/resources/TestSuite/webRegression/testng-web.xml
 
       # 6. Generate Allure Report
       - name: Generate Allure Report
