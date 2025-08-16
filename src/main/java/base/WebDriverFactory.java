@@ -15,6 +15,8 @@ public class WebDriverFactory {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         if (ConfigReader.getBool("headless")) options.addArguments("--headless=chrome");
+        String tmpProfile = "/tmp/chrome-profile-" + System.currentTimeMillis();
+        options.addArguments("--user-data-dir=" + tmpProfile);
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-notifications");
@@ -24,6 +26,8 @@ public class WebDriverFactory {
         WebDriver driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(ConfigReader.getInt("implicit.wait")));
         TL.set(driver);
+        System.out.println("Launching Chrome with options: " + options.toString());
+
     }
     public static WebDriver get() { return TL.get(); }
     public static void quit() {
