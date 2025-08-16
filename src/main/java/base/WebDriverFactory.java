@@ -15,20 +15,11 @@ public class WebDriverFactory {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         if (ConfigReader.getBool("headless")) options.addArguments("--headless=chrome");
-        options.addArguments("--start-maximized", "--no-sandbox", "--disable-notifications", "--remote-allow-origins=*");
-
-        try {
-            // ✅ Unique profile directory
-            String tmpProfileDir = Files.createTempDirectory("chrome-profile").toString();
-            options.addArguments("--user-data-dir=" + tmpProfileDir);
-
-            // ✅ Unique debugging port (prevents conflicts across sessions)
-            int randomPort = 9222 + (int)(Math.random() * 1000);
-            options.addArguments("--remote-debugging-port=" + randomPort);
-
-        } catch (Exception e) {
-            System.err.println("Failed to configure unique Chrome profile: " + e.getMessage());
-        }
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-notifications");
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--start-maximized");
 
         WebDriver driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(ConfigReader.getInt("implicit.wait")));
